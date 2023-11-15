@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="16dp">
+
+    <TextView
+        android:id="@+id/tv_repo_name"
+        android:layout_width="0dp"
+        android:text="Github Repo Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_fork_count"
+        app:layout_constraintHorizontal_chainStyle="packed"/>
+
+    <TextView
+        android:id="@+id/tv_repo_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constrainedWidth="true"
+        android:layout_marginTop="7dp"
+        android:text="Github Repo Desc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_repo_name"
+        app:layout_constraintEnd_toStartOf="@id/tv_stars_count"
+        app:layout_constraintHorizontal_chainStyle="packed"/>
+
+    <TextView
+        android:id="@+id/tv_fork_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="23"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_repo_name"
+        app:layout_constraintBottom_toBottomOf="@id/tv_repo_name"
+        app:layout_constraintStart_toEndOf="@id/tv_repo_name"
+        android:drawableStart="@drawable/baseline_fork_24"/>
+
+    <TextView
+        android:id="@+id/tv_stars_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_repo_desc"
+        app:layout_constraintBottom_toBottomOf="@id/tv_repo_desc"
+        app:layout_constraintStart_toEndOf="@id/tv_repo_desc"
+        android:drawableStart="@drawable/baseline_star_24" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
