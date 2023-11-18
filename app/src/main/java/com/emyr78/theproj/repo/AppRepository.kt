@@ -10,8 +10,8 @@ import javax.inject.Singleton
 
 @Singleton //TODO:Need to confirm it this is added to SingletonComponent.class or not
 //Assuming it is added
-class AppRepository @Inject constructor(private val gitHubApi: GitHubApi) {
-    fun getTopRepos(): List<RepoApiModel>{
-        return gitHubApi.getTopRepositories()
+class AppRepository @Inject constructor (private val gitHubApi: GitHubApi) {
+    suspend fun getTopRepos(): List<RepoApiModel>{
+        return gitHubApi.getTopRepositories().items
     }
 }

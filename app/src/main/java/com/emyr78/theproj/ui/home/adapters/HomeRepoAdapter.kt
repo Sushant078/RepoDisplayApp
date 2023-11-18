@@ -27,6 +27,11 @@ class HomeRepoAdapter : RecyclerView.Adapter<HomeRepoAdapter.RepoItemViewHolder>
         holder.bind(dataList[holder.bindingAdapterPosition])
     }
 
+    fun setRepoData(data: List<RepoItem>){
+        this.dataList.addAll(data)
+        notifyDataSetChanged()
+    }
+
     class RepoItemViewHolder(private val binding: RepoItemBinding) : ViewHolder(binding.root) {
         fun bind(repoItem: RepoItem) {
             binding.tvRepoName.text = repoItem.name

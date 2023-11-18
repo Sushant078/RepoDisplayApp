@@ -1,8 +1,8 @@
 plugins {
     id ("com.android.application")
     id ("org.jetbrains.kotlin.android")
-    id ("kotlin-kapt")
     id ("com.google.dagger.hilt.android")
+    id ("com.google.devtools.ksp")
 }
 
 android {
@@ -52,17 +52,21 @@ dependencies {
     testImplementation ("com.google.truth:truth:1.1.4")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation ("com.google.dagger:dagger:2.48")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0"){
         exclude (group= "com.squareup.okhttp3", module= "okhttp")
     }
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation ("androidx.activity:activity-ktx:1.7.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.3.0")
-    implementation ("com.squareup.retrofit2:adapter-rxjava2:2.3.0")
-    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.11.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
-    kapt ("com.google.dagger:dagger-compiler:2.48")
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
+
+    implementation("com.squareup.moshi:moshi:1.15.0")
+    implementation ("com.squareup.retrofit2:converter-moshi:2.9.0")
+    implementation ("com.google.dagger:hilt-android:2.48")
+
+    ksp ("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
+    ksp ("com.google.dagger:hilt-android-compiler:2.48")
+    ksp ("androidx.hilt:hilt-compiler:1.1.0")
+
+
 }

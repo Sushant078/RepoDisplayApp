@@ -1,21 +1,28 @@
 package com.emyr78.theproj.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.emyr78.theproj.R
-import com.emyr78.theproj.api.GitHubApi
-import com.emyr78.theproj.constants.Constants
+import com.emyr78.theproj.databinding.ActivityMainBinding
+import com.emyr78.theproj.ui.home.HomeFragment
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    @Inject
-    lateinit var gitHubApi: GitHubApi
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        Log.d(Constants.TAG, gitHubApi.getTopRepositories()[0].toString())
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        if(savedInstanceState == null){
+            supportFragmentManager.beginTransaction()
+                .add(R.id.frag_container,HomeFragment())
+                .commit()
+        }
+        init()
+    }
+
+    private fun init(){
+
     }
 }
