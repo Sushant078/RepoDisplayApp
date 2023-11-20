@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,11 +14,12 @@ import com.emyr78.theproj.databinding.FragmentHomeBinding
 import com.emyr78.theproj.ui.home.adapters.HomeRepoAdapter
 import com.emyr78.theproj.ui.home.state.HomeScreenState
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.internal.lifecycle.HiltViewModelFactory
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var viewModel: HomeScreenViewModel
+    private val viewModel: HomeScreenViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,7 +35,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun init() {
-        viewModel = ViewModelProvider(this)[HomeScreenViewModel::class.java]
         binding.rvRepoList.apply {
             adapter = HomeRepoAdapter()
             layoutManager = LinearLayoutManager(context)

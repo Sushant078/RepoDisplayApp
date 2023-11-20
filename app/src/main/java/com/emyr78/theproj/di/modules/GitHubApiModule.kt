@@ -12,14 +12,16 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
-@Module
+@Module(includes = [OkHttpConfigModule::class])
 @InstallIn(SingletonComponent::class)
 abstract class GitHubApiModule {
     companion object {
         @Provides
         @Singleton
-        fun provideOkhttp(): Call.Factory {
-            return OkHttpClient.Builder().build()
+        fun provideOkhttp(configurator: OkHttpConfigurator): Call.Factory {
+            return OkHttpClient.Builder().apply {
+                configurator.configure(this)
+            }.build()
         }
 
         @Provides

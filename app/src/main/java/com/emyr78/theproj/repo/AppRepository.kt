@@ -8,8 +8,7 @@ import javax.inject.Singleton
 //Abstraction might seem unnecessary but this extra layer ensures that features that use this
 //are separated from the changes we make in GitHubApi
 
-@Singleton //TODO:Need to confirm it this is added to SingletonComponent.class or not
-//Assuming it is added
+@Singleton
 class AppRepository @Inject constructor (private val gitHubApi: GitHubApi) {
     suspend fun getTopRepos(): List<RepoApiModel>{
         return gitHubApi.getTopRepositories().items
