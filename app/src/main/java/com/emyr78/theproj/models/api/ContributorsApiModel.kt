@@ -1,4 +1,4 @@
-package com.emyr78.theproj.models
+package com.emyr78.theproj.models.api
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

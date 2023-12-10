@@ -1,5 +1,6 @@
 package com.emyr78.theproj.models
 
+import com.emyr78.theproj.models.api.RepoApiModel
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)

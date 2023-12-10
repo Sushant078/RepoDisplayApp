@@ -43,7 +43,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.5.0")
@@ -64,10 +63,9 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.15.0")
     implementation ("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation ("com.google.dagger:hilt-android:2.48")
+    implementation("io.coil-kt:coil:2.0.0")
 
     ksp ("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
     ksp ("com.google.dagger:hilt-android-compiler:2.48")
     ksp ("androidx.hilt:hilt-compiler:1.1.0")
-
-
 }

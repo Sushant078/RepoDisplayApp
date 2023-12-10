@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
 
     private fun init() {
         binding.rvRepoList.apply {
-            adapter = HomeRepoAdapter()
+            adapter = HomeRepoAdapter(viewModel::onRepoSelected)
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(
                 DividerItemDecoration(

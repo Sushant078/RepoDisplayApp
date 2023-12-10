@@ -7,12 +7,18 @@ import androidx.lifecycle.viewModelScope
 import com.emyr78.theproj.models.RepoItem
 import com.emyr78.theproj.repo.AppRepository
 import com.emyr78.theproj.ui.home.state.HomeScreenState
+import com.emyr78.theproj.ui.screen.ActivityDrivenScreenNavigator
+import com.emyr78.theproj.ui.screen.DetailsScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(private val appRepository: AppRepository): ViewModel(){
+class HomeScreenViewModel @Inject constructor(
+    private val appRepository: AppRepository,
+    private val screenNavigator: ActivityDrivenScreenNavigator
+): ViewModel(){
+    //TODO: Migrate to Flows
     private val _viewState : MutableLiveData<HomeScreenState> = MutableLiveData(HomeScreenState.HomeScreenStateLoading)
     val viewState: LiveData<HomeScreenState> = _viewState
 
@@ -22,6 +28,7 @@ class HomeScreenViewModel @Inject constructor(private val appRepository: AppRepo
             _viewState.value = HomeScreenState.HomeScreenStateLoaded(
                 repos = repos.map {
                     RepoItem(
+                        it.owner.login,
                         it.name,
                         it.description,
                         it.stargazersCount,
@@ -30,5 +37,9 @@ class HomeScreenViewModel @Inject constructor(private val appRepository: AppRepo
                 }
             )
         }
+    }
+
+    fun onRepoSelected(repoOwner:String,repoName:String){
+        screenNavigator.goToScreen(DetailsScreen(repoOwner,repoName))
     }
 }
