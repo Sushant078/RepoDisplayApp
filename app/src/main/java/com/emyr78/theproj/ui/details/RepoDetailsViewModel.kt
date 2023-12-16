@@ -5,12 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.emyr78.theproj.constants.handleApiResponse
 import com.emyr78.theproj.models.ContributorsItem
 import com.emyr78.theproj.repo.AppRepository
 import com.emyr78.theproj.ui.details.state.RepoContributorsViewState
+import com.emyr78.theproj.ui.details.state.RepoContributorsViewStateError
 import com.emyr78.theproj.ui.details.state.RepoContributorsViewStateLoaded
 import com.emyr78.theproj.ui.details.state.RepoContributorsViewStateLoading
 import com.emyr78.theproj.ui.details.state.RepoInfoViewState
+import com.emyr78.theproj.ui.details.state.RepoInfoViewStateError
 import com.emyr78.theproj.ui.details.state.RepoInfoViewStateLoaded
 import com.emyr78.theproj.ui.details.state.RepoInfoViewStateLoading
 import dagger.assisted.Assisted
@@ -33,28 +36,52 @@ class RepoDetailsViewModel @AssistedInject constructor(
 
     fun getRepositoryInfo(){
         viewModelScope.launch {
-            val repoInfo = appRepository.getRepoInfo(repoOwner,repoName)
-            _repoInfoViewState.value = RepoInfoViewStateLoaded(
-                repoInfo.name,
-                repoInfo.description,
-                repoInfo.createdDate,
-                repoInfo.updatedDate
-            )
+            appRepository.getRepoInfo(repoOwner, repoName).collect { apiResponse ->
+                handleApiResponse(
+                    apiResponse,
+                    apiCallSuccess = { repoInfo ->
+                        _repoInfoViewState.value = RepoInfoViewStateLoaded(
+                            repoInfo.name,
+                            repoInfo.description,
+                            repoInfo.createdDate,
+                            repoInfo.updatedDate
+                        )
+                    },
+                    apiCallError = { error ->
+                        _repoInfoViewState.value = RepoInfoViewStateError(error)
+                    },
+                    apiCallLoading = {
+                        _repoInfoViewState.value = RepoInfoViewStateLoading
+                    }
+                )
+            }
         }
     }
 
     fun getContributorsInfo(){
         viewModelScope.launch {
-            val contributorsList = appRepository.getContributors(repoOwner,repoName)
-            _contributorsListViewState.value = RepoContributorsViewStateLoaded(
-                contributors = contributorsList.map {
-                    ContributorsItem(
-                        it.id,
-                        it.login,
-                        it.avatarUrl
-                    )
-                }
-            )
+            appRepository.getContributors(repoOwner, repoName).collect { apiResponse ->
+                handleApiResponse(
+                    apiResponse,
+                    apiCallSuccess = { contributorsList ->
+                        _contributorsListViewState.value = RepoContributorsViewStateLoaded(
+                            contributors = contributorsList.map {
+                                ContributorsItem(
+                                    it.id,
+                                    it.login,
+                                    it.avatarUrl
+                                )
+                            }
+                        )
+                    },
+                    apiCallError = { error ->
+                        _contributorsListViewState.value = RepoContributorsViewStateError(error)
+                    },
+                    apiCallLoading = {
+                        _contributorsListViewState.value = RepoContributorsViewStateLoading
+                    }
+                )
+            }
         }
     }
 

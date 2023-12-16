@@ -7,3 +7,6 @@ data object RepoContributorsViewStateLoading : RepoContributorsViewState()
 data class RepoContributorsViewStateLoaded(
     val contributors: List<ContributorsItem>
 ) : RepoContributorsViewState()
+data class RepoContributorsViewStateError(
+    val message: String
+) : RepoContributorsViewState()

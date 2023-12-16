@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.emyr78.theproj.constants.handleApiResponse
 import com.emyr78.theproj.models.RepoItem
 import com.emyr78.theproj.repo.AppRepository
 import com.emyr78.theproj.ui.home.state.HomeScreenState
@@ -17,29 +18,46 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val appRepository: AppRepository,
     private val screenNavigator: ActivityDrivenScreenNavigator
-): ViewModel(){
-    //TODO: Migrate to Flows
-    private val _viewState : MutableLiveData<HomeScreenState> = MutableLiveData(HomeScreenState.HomeScreenStateLoading)
+) : ViewModel() {
+    /*TODO: Should migrate to Flows? LiveData enforces that the value only be updated on main thread
+       via setValue and postValue,can migrate to flows but will have to enforce the same mechanism
+       to avoid touching value from any other thread since UI relies on the corresponding value*/
+    private val _viewState: MutableLiveData<HomeScreenState> =
+        MutableLiveData(HomeScreenState.HomeScreenStateLoading)
     val viewState: LiveData<HomeScreenState> = _viewState
 
     init {
         viewModelScope.launch {
-            val repos = appRepository.getTopRepos()
-            _viewState.value = HomeScreenState.HomeScreenStateLoaded(
-                repos = repos.map {
-                    RepoItem(
-                        it.owner.login,
-                        it.name,
-                        it.description,
-                        it.stargazersCount,
-                        it.forksCount
-                    )
-                }
-            )
+            appRepository.getTopRepos().collect { apiResponse ->
+                handleApiResponse(
+                    apiResponse,
+                    apiCallSuccess = { itemsList ->
+                        _viewState.value = itemsList.items.let {
+                            HomeScreenState.HomeScreenStateLoaded(
+                                repos = it.map { repoApiModel ->
+                                    RepoItem(
+                                        repoApiModel.owner.login,
+                                        repoApiModel.name,
+                                        repoApiModel.description,
+                                        repoApiModel.stargazersCount,
+                                        repoApiModel.forksCount
+                                    )
+                                }
+                            )
+                        }
+                    },
+                    apiCallError = { error ->
+                        _viewState.value = HomeScreenState.HomeScreenStateError(error)
+                    },
+                    apiCallLoading = {
+                        _viewState.value = HomeScreenState.HomeScreenStateLoading
+                    }
+                )
+            }
         }
     }
 
-    fun onRepoSelected(repoOwner:String,repoName:String){
-        screenNavigator.goToScreen(DetailsScreen(repoOwner,repoName))
+    fun onRepoSelected(repoOwner: String, repoName: String) {
+        screenNavigator.goToScreen(DetailsScreen(repoOwner, repoName))
     }
 }

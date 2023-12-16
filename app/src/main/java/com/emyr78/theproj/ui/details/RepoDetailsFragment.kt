@@ -5,15 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.emyr78.theproj.constants.convertDateFormat
 import com.emyr78.theproj.constants.observe
 import com.emyr78.theproj.databinding.FragmentRepoDetailsBinding
 import com.emyr78.theproj.ui.details.adapters.ContributorsAdapter
 import com.emyr78.theproj.ui.details.state.RepoContributorsViewState
+import com.emyr78.theproj.ui.details.state.RepoContributorsViewStateError
 import com.emyr78.theproj.ui.details.state.RepoContributorsViewStateLoaded
 import com.emyr78.theproj.ui.details.state.RepoContributorsViewStateLoading
 import com.emyr78.theproj.ui.details.state.RepoInfoViewState
+import com.emyr78.theproj.ui.details.state.RepoInfoViewStateError
 import com.emyr78.theproj.ui.details.state.RepoInfoViewStateLoaded
 import com.emyr78.theproj.ui.details.state.RepoInfoViewStateLoading
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,6 +69,7 @@ class RepoDetailsFragment : Fragment() {
         when (state) {
             is RepoInfoViewStateLoading -> handleInfoLoadingState(binding)
             is RepoInfoViewStateLoaded -> handleInfoLoadedState(binding, state)
+            is RepoInfoViewStateError -> handleInfoErrorState(state)
         }
     }
 
@@ -72,6 +77,7 @@ class RepoDetailsFragment : Fragment() {
         when (state) {
             is RepoContributorsViewStateLoading -> handleContributorsLoadingState(binding)
             is RepoContributorsViewStateLoaded -> handleContributorsLoadedState(binding, state)
+            is RepoContributorsViewStateError -> handleContributorsErrorState(state)
         }
     }
 
@@ -92,6 +98,10 @@ class RepoDetailsFragment : Fragment() {
         binding.contributorList.visibility = View.GONE
     }
 
+    private fun handleContributorsErrorState(state: RepoContributorsViewStateError) {
+        displayToastAndPopFragment(state.message)
+    }
+
     private fun handleInfoLoadedState(
         binding: FragmentRepoDetailsBinding,
         state: RepoInfoViewStateLoaded,
@@ -101,13 +111,17 @@ class RepoDetailsFragment : Fragment() {
 
         binding.repoName.text = state.repoName
         binding.repoDescription.text = state.repoDescription
-        binding.creationDate.text = state.createdDate
-        binding.updatedDate.text = state.updatedDate
+        binding.creationDate.text = convertDateFormat(state.createdDate)
+        binding.updatedDate.text = convertDateFormat(state.updatedDate)
     }
 
     private fun handleInfoLoadingState(binding: FragmentRepoDetailsBinding) {
         binding.detailsLoadingIndicator.visibility = View.VISIBLE
         binding.toggleInfoTextVisibility(View.INVISIBLE)
+    }
+
+    private fun handleInfoErrorState(state: RepoInfoViewStateError) {
+        displayToastAndPopFragment(state.message)
     }
 
     private fun FragmentRepoDetailsBinding.toggleInfoTextVisibility(visibility: Int) {
@@ -117,6 +131,11 @@ class RepoDetailsFragment : Fragment() {
         creationDate.visibility = visibility
         updatedDateLabel.visibility = visibility
         updatedDate.visibility = visibility
+    }
+
+    private fun displayToastAndPopFragment(message: String){
+        Toast.makeText(context,message, Toast.LENGTH_SHORT).show()
+        parentFragmentManager.popBackStack()
     }
 
     companion object {

@@ -8,3 +8,6 @@ data class RepoInfoViewStateLoaded(
     val createdDate: String,
     val updatedDate: String
 ) : RepoInfoViewState()
+data class RepoInfoViewStateError(
+    val message: String,
+) : RepoInfoViewState()
